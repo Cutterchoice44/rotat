@@ -1,0 +1,379 @@
+/* ─── RESET & BASE STYLES ───────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --brand-teal: #5A8785;
+  --bg-dark:   #111;
+  --text-light: #fafafa;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg-dark);
+  color: var(--text-light);
+  font-family: Arial, sans-serif;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── HEADER ───────────────────────────────────────────────────────────────── */
+header {
+  display: flex;
+  justify-content: space-between;  /* logos at ends */
+  align-items:    center;
+  padding: 0.5rem 0.8rem;
+  background: #000;
+}
+
+header .logo {
+  flex: 0 0 auto;  /* don’t stretch or shrink */
+  height: 80px;
+  margin-bottom: 0.3rem;
+}
+
+header .title {
+  flex: 1 1 auto;   /* fill center gap */
+  text-align: center;
+}
+
+header .title h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+header .title .tagline {
+  font-size: 1.2rem;
+  color: var(--brand-teal);
+  margin-top: 0.3rem;
+}
+
+/* ─── GRID LAYOUT ─────────────────────────────────────────────────────────── */
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+@media (min-width: 600px) {
+  .grid-container {
+    grid-template-columns: 1fr 1.5fr;
+  }
+  header .logo {
+    margin-bottom: 0;
+    margin-right: 1rem;
+  }
+}
+
+@media (min-width: 900px) {
+  header .title h1 {
+    font-size: 5rem;
+  }
+  header .title .tagline {
+    font-size: 2rem;
+  }
+  .grid-container {
+    grid-template-columns: 1fr 1.5fr 1fr 1fr;
+  }
+  .chat iframe {
+    height: 800px;
+  }
+  #now-art {
+    max-width: 600px;
+  }
+}
+
+/* ─── SECTIONS ────────────────────────────────────────────────────────────── */
+section {
+  background: #222;
+  border: 2px solid var(--brand-teal);
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+section h2 {
+  margin-bottom: 0.5rem;
+  color: var(--brand-teal);
+  text-align: center;
+}
+
+/* CHAT IFRAME */
+.chat iframe {
+  width: 100%;
+  height: 900px;
+  border: none;
+  border-radius: 4px;
+}
+
+/* LIVE PLAYER */
+.live-player {
+  background: #222;
+  border: 2px solid var(--brand-teal);
+  border-radius: 6px;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.live-player iframe,
+.live-player audio {
+  width: 100%;
+  height: 300px;
+  max-height: 55vh;
+  border: none;
+  border-radius: 4px;
+  margin: 0 auto 1rem;
+  display: block;
+}
+
+.player-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+}
+
+#now-archive {
+  font-weight: bold;
+  color: var(--brand-teal);
+  font-size: 1.2rem;
+  margin: 0.3rem 0 1rem;
+}
+
+.popout-btn {
+  display: inline-block;
+  padding: 0.5rem 2rem;
+  font-size: 1rem;
+  background: var(--brand-teal);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0.3rem auto 0.5rem;
+}
+
+/* CURRENT DJ ARTWORK */
+#now-art {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 8px;
+  object-fit: cover;
+  display: block;
+  margin: 1rem auto;
+}
+
+/* WEEKLY SCHEDULE */
+.schedule {
+  background: #111;
+  border-radius: 6px;
+  padding: 0 1rem 1rem;
+  max-height: 2000px;
+  overflow-y: auto;
+}
+
+.schedule-heading {
+  position: sticky;
+  top: 0;
+  background: #111;
+  z-index: 10;
+  padding: 0.5rem 0;
+  font-size: 1.5rem;
+  border-bottom: 1px solid var(--brand-teal);
+}
+
+#schedule-container h3 {
+  margin-top: 2rem;
+  border-bottom: 1px solid var(--brand-teal);
+  padding-bottom: 0.5rem;
+  font-size: 1.6rem;
+}
+
+#schedule-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+#schedule-container li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 1rem;
+}
+
+#schedule-container li strong {
+  min-width: 80px;
+  font-weight: bold;
+}
+
+#schedule-container li img {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+#schedule-container li span,
+#schedule-container li a {
+  font-size: 1.2rem;
+}
+
+#schedule-container li a {
+  margin-left: auto;
+  background: var(--brand-teal);
+  color: #000;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+/* MIXCLOUD EMBEDS */
+.mixcloud {
+  background: #000;
+  border-radius: 6px;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 2000px;
+  overflow: hidden;
+}
+
+#mixcloud-list {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 1900px;
+  padding-right: 5px;
+  scroll-behavior: smooth;
+}
+
+#mixcloud-list iframe {
+  width: 100%;
+  height: 120px;
+  margin-bottom: 0.5rem;
+  border: none;
+}
+
+/* ADD SHOW UI */
+.add-mixcloud {
+  text-align: center;
+  padding-top: 0.5rem;
+}
+
+.add-mixcloud input {
+  width: 80%;
+  max-width: 600px;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.add-mixcloud button {
+  margin-top: 0.5rem;
+  padding: 0.5rem 2rem;
+  font-size: 1rem;
+  background: var(--brand-teal);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* FOOTER BANNER */
+.banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--brand-teal);
+  padding: 1rem;
+}
+
+.banner a {
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  color: #000;
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+}
+
+.banner a:hover {
+  color: var(--text-light);
+}
+
+@media (min-width: 600px) {
+  .banner {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+/* PLAYER HEIGHT OVERRIDES (desktop only) */
+.live-player iframe,
+.player-container iframe {
+  height: 90vh !important;
+  margin-top: 10px !important;
+}
+
+/* ─── MOBILE OVERWRITES ────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Layout */
+  header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  header .logo {
+    max-width: 180px;
+    margin-bottom: 0.5rem;
+  }
+
+  header .title h1 {
+    font-size: 1.8rem;
+    line-height: 1.2;
+  }
+
+  header .title .tagline {
+    font-size: 1rem;
+  }
+
+  .grid-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0 0.5rem;
+  }
+
+  .live-player    { order: 1; }
+  .chat           { order: 2; }
+  .schedule       { order: 3; }
+  .mixcloud       { order: 4; display: none !important; }
+
+  /* Chat & Player sizing */
+  .chat iframe    { height: 650px !important; }
+  .live-player iframe,
+  .live-player audio { height: 80px !important; }
+
+  /* Artwork & Popouts */
+  #now-art        { display: none !important; }
+  .popout-btn     { display: none !important; }
+
+  /* Footer */
+  .banner         { display: none !important; }
+
+  /* Mixcloud list adjustments (desktop-only anyway) */
+  #mixcloud-list { max-height: 450px; }
+  #mixcloud-list iframe { height: 150px; }
+
+  /* Inputs & Buttons */
+  .add-mixcloud input  { width: 95%; }
+  .add-mixcloud button { width: 100%; }
+}
