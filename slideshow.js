@@ -1,4 +1,4 @@
-(function() {
+(function () {
   const API_KEY = "pk_0b8abc6f834b444f949f727e88a728e0";
   const STATION_ID = "cutters-choice-radio";
   const BASE_URL = "https://api.radiocult.fm/api";
@@ -41,38 +41,56 @@
     const artEl = document.getElementById("now-art");
     let i = 0;
     if (!artEl || images.length === 0) return;
+    artEl.src = images[0]; // show first immediately
 
     setInterval(() => {
-      artEl.src = images[i];
       i = (i + 1) % images.length;
-    }, 20000); // 20 seconds
+      artEl.src = images[i];
+    }, 20000);
   }
 
-  async function initArtworkRotationIfArchive() {
+  async function startRotationIfArchive() {
+    const now = new Date();
+    const eightDaysLater = new Date(now);
+    eightDaysLater.setDate(now.getDate() + 8);
+
+    const schedules = await fetchSchedule(now.toISOString(), eightDaysLater.toISOString());
+    const artists = await fetchArtists();
+    const validIds = getUpcomingArtistIds(schedules);
+    const filtered = filterArtistsWithArtwork(artists, validIds);
+    const artworkUrls = filtered.map(a => a.logo['512x512'] || a.logo.default);
+
+    if (artworkUrls.length) {
+      rotateArtwork(artworkUrls);
+    }
+  }
+
+  function checkIfArchiveAndStart(text) {
+    const lower = text.toLowerCase();
+    if (lower.includes("archive") || lower.includes("loading archive")) {
+      startRotationIfArchive();
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
     const archiveEl = document.getElementById("now-archive");
-    if (!archiveEl) return;
+    if (!archiveEl) {
+      console.warn("❌ #now-archive not found — rotating artwork won't run.");
+      return;
+    }
 
-    const observer = new MutationObserver(async () => {
-      const archiveText = archiveEl.textContent.toLowerCase();
-      if (archiveText.includes("archive") || archiveText.includes("loading archive")) {
-        observer.disconnect();
+    // Check current text immediately
+    checkIfArchiveAndStart(archiveEl.textContent);
 
-        const now = new Date();
-        const eightDaysLater = new Date(now);
-        eightDaysLater.setDate(now.getDate() + 8);
-
-        const schedules = await fetchSchedule(now.toISOString(), eightDaysLater.toISOString());
-        const artists = await fetchArtists();
-        const validIds = getUpcomingArtistIds(schedules);
-        const filtered = filterArtistsWithArtwork(artists, validIds);
-        const artworkUrls = filtered.map(a => a.logo['512x512'] || a.logo.default);
-
-        rotateArtwork(artworkUrls);
+    // Also listen for changes
+    const observer = new MutationObserver(mutations => {
+      for (const m of mutations) {
+        if (m.type === "childList" || m.type === "characterData") {
+          checkIfArchiveAndStart(archiveEl.textContent);
+        }
       }
     });
 
-    observer.observe(archiveEl, { childList: true, subtree: true });
-  }
-
-  document.addEventListener("DOMContentLoaded", initArtworkRotationIfArchive);
+    observer.observe(archiveEl, { childList: true, subtree: true, characterData: true });
+  });
 })();
