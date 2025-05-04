@@ -41,7 +41,7 @@
     const artEl = document.getElementById("now-art");
     let i = 0;
     if (!artEl || images.length === 0) return;
-    artEl.src = images[0]; // show first immediately
+    artEl.src = images[0]; // show first image immediately
 
     setInterval(() => {
       i = (i + 1) % images.length;
@@ -49,7 +49,11 @@
     }, 20000);
   }
 
-  async function startRotationIfArchive() {
+  async function maybeStartRotation() {
+    const archiveText = document.getElementById("now-archive")?.textContent.toLowerCase() || "";
+    const isArchive = archiveText.includes("archive") || archiveText.includes("now playing");
+    if (!isArchive) return;
+
     const now = new Date();
     const eightDaysLater = new Date(now);
     eightDaysLater.setDate(now.getDate() + 8);
@@ -65,30 +69,19 @@
     }
   }
 
-  function checkIfArchiveAndStart(text) {
-    const lower = text.toLowerCase();
-    if (lower.includes("archive") || lower.includes("loading archive")) {
-      startRotationIfArchive();
-    }
-  }
-
   document.addEventListener("DOMContentLoaded", () => {
     const archiveEl = document.getElementById("now-archive");
     if (!archiveEl) {
-      console.warn("❌ #now-archive not found — rotating artwork won't run.");
+      console.warn("❌ #now-archive not found");
       return;
     }
 
-    // Check current text immediately
-    checkIfArchiveAndStart(archiveEl.textContent);
+    // Immediate check
+    maybeStartRotation();
 
-    // Also listen for changes
-    const observer = new MutationObserver(mutations => {
-      for (const m of mutations) {
-        if (m.type === "childList" || m.type === "characterData") {
-          checkIfArchiveAndStart(archiveEl.textContent);
-        }
-      }
+    // Watch for updates to archive content
+    const observer = new MutationObserver(() => {
+      maybeStartRotation();
     });
 
     observer.observe(archiveEl, { childList: true, subtree: true, characterData: true });
